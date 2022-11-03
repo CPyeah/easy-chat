@@ -14,7 +14,8 @@ repositories {
 
 dependencies {
     implementation group: 'io.netty', name: 'netty-all', version: '4.1.77.Final'
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

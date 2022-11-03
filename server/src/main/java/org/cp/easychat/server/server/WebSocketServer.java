@@ -15,6 +15,9 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * ws://localhost:8080/chat
+ */
 @Slf4j
 public class WebSocketServer {
 
@@ -25,7 +28,7 @@ public class WebSocketServer {
 	public void start() {
 		this.init();
 		try {
-			ChannelFuture future = serverBootstrap.bind(8888);
+			ChannelFuture future = serverBootstrap.bind(8080);
 			log.info("server start success.");
 			future.channel().closeFuture().sync();
 		} catch (Exception e) {
