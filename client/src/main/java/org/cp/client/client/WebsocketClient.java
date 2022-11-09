@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WebsocketClient {
 
-	private URI uri;
+	private final URI uri;
 	private Bootstrap bootstrap;
 	private EventLoopGroup eventLoopGroup;
 	private ChannelPromise channelPromise;

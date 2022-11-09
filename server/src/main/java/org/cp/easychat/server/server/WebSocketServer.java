@@ -4,13 +4,16 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -66,5 +69,34 @@ public class WebSocketServer {
 			}
 		};
 	}
+	
+	// 我的业务处理逻辑
+	private static class MyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
+		// 上线
+		@Override
+		public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+			log.info("⬆ new connection from {}", ctx.channel().remoteAddress());
+		}
+
+		// 下线
+		@Override
+		public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+			log.info(" ⬇️️ up connection close from {}", ctx.channel().remoteAddress());
+		}
+
+		// 读取消息，并返回
+		@Override
+		protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+			log.info(" 🆕 New Message: {}, from {}", msg, ctx.channel().remoteAddress());
+			if (! (msg instanceof TextWebSocketFrame)) {
+				log.error("message is not text, {}", msg);
+				return;
+			}
+			TextWebSocketFrame request = (TextWebSocketFrame) msg;
+			log.info("received text message : {}", request);
+
+			ctx.writeAndFlush(new TextWebSocketFrame("server send :" + request.text()));
+		}
+	}
 }
